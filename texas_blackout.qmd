@@ -1,0 +1,115 @@
+---
+title: "Homework Assignment 3"
+author: "Jackson Coldiron"
+date: today
+format:
+  pdf:
+    documentclass: report
+    geometry:
+      - top=0.75in
+      - bottom=0.75in
+      - left=1in
+      - right=1in
+    classoption: oneside
+    mainfont: Calibri
+    fontsize: 11pt
+    linestretch: 1.15
+execute:
+  cache: true
+  echo: true       
+  warning: false
+  message: false
+code-fold: false
+---
+## Introduction
+
+
+#### i. Data Overview
+
+#### ii. Data Citation
+
+
+## Data Preparation
+```{r}
+# Load required packages
+library(raster)
+library(sf)
+library(here)
+
+# Bring in the data
+lights_1a <- raster(here("data", "NP46A1", "VNP46A1.A2021038.h08v05.001.2021039064328.tif"))
+lights_1b <- rast(here("data", "NP46A1", "VNP46A1.A2021038.h08v06.001.2021039064329.tif"))
+lights_2a <- rast(here("data", "NP46A1", "VNP46A1.A2021047.h08v05.001.2021048091106.tif"))
+lights_2b <- rast(here("data", "NP46A1", "VNP46A1.A2021047.h08v06.001.2021048091105.tif"))
+
+roads <- st_read(here("data", "gis_osm_roads_free_1.gpkg"))
+houses <- st_read(here("data", "gis_osm_buildings_a_free_1.gpkg")) 
+
+texas <- st_read(here("data", "ACS_2019_5YR_TRACT_48_TEXAS. ", ""))
+
+
+# Check the CRS of data and transform if not
+# Function to check that rasters and vector datas match
+
+
+
+```
+
+
+## Create Blackout Mask
+In order to identify areas that have experienced a blackout, we need to create a mask that will indicate whether or not each cell has experienced a blackout.
+
+```{r}
+# find the change in night lights intensity (presumably) caused by the storm
+# hint: this will require creating a raster object for each day (2021-02-07 and 2021-02-16)
+
+
+
+```
+
+```{r}
+# reclassify the difference raster, assuming that any location that experienced a drop of more than 200 nW cm-2sr-1 experienced a blackout
+# assign NA to all locations that experienced a drop of less than 200 nW cm-2sr-1 change
+
+```
+
+```{r}
+# vectorize the blackout mask
+# hint: use st_as_sf() to convert from a raster to a vector and fix any invalid geometries with st_make_valid()
+```
+
+
+```{r}
+# crop (spatially subset) the blackout mask to the Houston area as defined by the following coordinates:
+# (-96.5, 29), (-96.5, 30.5), (-94.5, 30.5), (-94.5, 29)
+# re-project the cropped blackout dataset to EPSG:3083 (NAD83 / Texas Centric Albers Equal Area)
+```
+
+
+
+## Exclude Highways
+Highways experience changes in their night light intensities, but these may not be related to the storm. Therefore, we need to exclude any locations within 200 meters of all highways in the Houston area
+```{r}
+# Identify areas within 200m of all highways using st_union
+
+# Find areas that experienced blackouts that are further than 200m from a highway 
+```
+
+
+## Identify Impacted Homes
+```{r}
+# Identify the homes that overlap with areas that experienced blackout
+
+# Use the SQL query that can be used as an argument in st_read
+"SELECT *
+FROM gis_osm_buildings_a_free_1`
+WHERE (type IS NULL AND name IS NULL)`
+OR type in ('residential', 'apartments', 'house', 'static_caravan', 'detached')"
+```
+
+
+## Discussion
+
+
+
+
